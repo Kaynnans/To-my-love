@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Botão Lindo — HTML + CSS</title>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --surface: #0f172a;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --ring: #93c5fd;
+      --shadow: 0 10px 30px rgba(0,0,0,.4);
+      --grad-a: #8b5cf6;
+      --grad-b: #06b6d4;
+      --grad-c: #22d3ee;
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7fb;
+        --surface: #ffffff;
+        --text: #0f172a;
+        --muted: #334155;
+        --ring: #2563eb;
+        --shadow: 0 10px 30px rgba(2,6,23,.15);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(139,92,246,.25), transparent 60%),
+                  radial-gradient(900px 600px at 85% 80%, rgba(34,211,238,.25), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+      padding: 2rem;
+    }
+
+    /* ======= Partículas de fundo ======= */
+    .bg-particles{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+    .bg-particles .p{ position:absolute; width:6px; height:6px; border-radius:999px; opacity:.12; filter: blur(.5px); }
+    .bg-particles .p.a{ background:#8b5cf6; }
+    .bg-particles .p.b{ background:#22d3ee; }
+    .bg-particles .p.c{ background:#06b6d4; }
+    @keyframes drift{
+      0%{ transform: translate(var(--x), 110vh) scale(var(--s)) rotate(0deg); opacity:0; }
+      10%{ opacity:.15; }
+      90%{ opacity:.15; }
+      100%{ transform: translate(calc(var(--x) + var(--dx)), -10vh) scale(var(--s)) rotate(360deg); opacity:0; }
+    }
+
+    .card{
+      position: relative;
+      z-index: 1; /* acima das partículas */
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      backdrop-filter: blur(6px) saturate(120%);
+      -webkit-backdrop-filter: blur(6px) saturate(120%);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 2.25rem 2rem;
+      text-align: center;
+      max-width: 680px;
+      width: min(92vw, 680px);
+    }
+
+    h1 { font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); margin: 0 0 1.5rem; }
+
+    .btn{
+      --h: 56px; --pad-x: 22px;
+      display:inline-grid; grid-auto-flow: column; align-items:center; gap:.75rem;
+      height: var(--h); padding: 0 var(--pad-x);
+      border-radius: 999px; position: relative; isolation:isolate;
+      color: #fff; text-decoration: none; line-height: 1; font-weight: 700; letter-spacing: .3px;
+      border: 0; cursor: pointer;
+      background: linear-gradient(135deg, var(--grad-a), var(--grad-b) 50%, var(--grad-c));
+      box-shadow: 0 10px 25px rgba(34,211,238,.25), 0 6px 14px rgba(139,92,246,.25);
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn::before{ content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,.45), rgba(255,255,255,.1) 40%, rgba(255,255,255,0) 60%); mix-blend-mode: overlay; pointer-events:none; z-index:-1; }
+    .btn:focus-visible{ outline: none; box-shadow: 0 0 0 4px rgba(255,255,255,.25), 0 0 0 8px var(--ring), 0 10px 25px rgba(34,211,238,.25), 0 6px 14px rgba(139,92,246,.25); }
+    .btn:hover{ transform: translateY(-1px); filter: saturate(115%); box-shadow: 0 14px 40px rgba(34,211,238,.30), 0 8px 20px rgba(139,92,246,.30); }
+    .btn:active{ transform: translateY(1px) scale(.98); filter: saturate(105%); box-shadow: 0 8px 18px rgba(34,211,238,.25), 0 6px 14px rgba(139,92,246,.25); }
+    .btn svg{ width: 22px; height: 22px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.2)); flex-shrink: 0; }
+    .btn span{ white-space: nowrap; }
+    .btn.ghost{ color: var(--text); background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.25); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), var(--shadow); }
+    .btn.ghost:hover{ filter:none; }
+    .btn .ripple{ position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none; }
+    .btn .ripple::after{ content:""; position:absolute; left:50%; top:50%; width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.6); transform: translate(-50%,-50%) scale(0); opacity:0; animation: none; }
+    .btn:active .ripple::after{ animation: ripple .45s ease; }
+    @keyframes ripple{ 0%{ transform: translate(-50%,-50%) scale(0); opacity:.45; } 100%{ transform: translate(-50%,-50%) scale(16); opacity:0; } }
+
+    .row{ display:flex; gap: 1rem; justify-content:center; flex-wrap: wrap; }
+
+    /* ======= Imagem em coração ======= */
+  
+    /* ======= Corações NOVOS (mais limpos) ======= */
+    .hearts{ position:absolute; inset:0; overflow:visible; pointer-events:none; }
+    .heart{
+      --size: 22px; /* pode ser sobrescrita via JS */
+      position:absolute; bottom:-10px; left:var(--left, 50%);
+      width: var(--size); height: var(--size);
+      color: #ff6b9e; /* use currentColor para trocar via JS, se quiser */
+      background: currentColor;
+      transform: translate(-50%, 0) rotate(45deg) scale(1);
+      transform-origin: center bottom;
+      border-radius: 4px; /* deixa a ponta mais suave */
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.25));
+      will-change: transform, opacity;
+    }
+    .heart::before, .heart::after{
+      content:""; position:absolute; width:100%; height:100%; background: currentColor; border-radius:50%;
+    }
+    .heart::before{ left:-50%; top:0; }
+    .heart::after{ left:0; top:-50%; }
+
+    @keyframes floatUp{
+      0%{ transform: translate(-50%, 0) rotate(45deg) scale(.85); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translate(calc(-50% + var(--sx, 0px)), -280px) rotate(405deg) scale(1.05); opacity:0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- partículas no background -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <div class="card">
+    <h1>Clique aqui...</h1>
+    <div class="row">
+        <a href="inicialface.html"><button class="btn" aria-label="Começar agora">
+        <span class="ripple" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3.5l2.59 5.25 5.81.84-4.2 4.09.99 5.78L12 16.98 6.81 19.46l.99-5.78-4.2-4.09 5.81-.84L12 3.5z" stroke="white" stroke-width="1.4"></path>
+        </svg>
+        <span>Começar agora</span>
+      </button></a>
+      
+    </div>
+
+    <!-- Imagem em formato de coração + área emissora de corações -->
+    <div class="image-container">
+      <div class="heart-zone" id="heartZone">
+        <img class="heart-photo" src="" alt="" />
+        <div class="hearts" id="heartsLayer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Partículas de fundo =====
+    (function(){
+      const wrap = document.getElementById('bgParticles');
+      const count = 80; // quantidade de partículas
+      for(let i=0;i<count;i++){
+        const s = document.createElement('span');
+        s.className = 'p ' + ['a','b','c'][Math.floor(Math.random()*3)];
+        const x = Math.floor(Math.random()*100) + 'vw';
+        const sscale = (Math.random()*0.9 + 0.4).toFixed(2); // 0.4 - 1.3
+        const dx = (Math.random()*40 - 20) + 'vw';
+        const dur = (Math.random()*30 + 25).toFixed(0); // 25-55s
+        const delay = (Math.random()*-dur).toFixed(2); // espalha no tempo
+        s.style.setProperty('--x', x);
+        s.style.setProperty('--dx', dx);
+        s.style.setProperty('--s', sscale);
+        s.style.left = x;
+        s.style.animation = `drift ${dur}s linear ${delay}s infinite`;
+        wrap.appendChild(s);
+      }
+    })();
+
+    // ===== Corações ao passar o mouse na foto =====
+    (function(){
+      const zone = document.getElementById('heartZone');
+      const layer = document.getElementById('heartsLayer');
+      let emitter = null;
+
+      function spawnHeart(){
+        const h = document.createElement('i');
+        h.className = 'heart';
+        const rect = zone.getBoundingClientRect();
+        const x = Math.random() * rect.width; // posição horizontal
+        const sx = (Math.random() * 120 - 60) + 'px'; // desvio lateral
+        const size = Math.random()*14 + 14; // 14-28px
+        h.style.setProperty('--left', x + 'px');
+        h.style.setProperty('--sx', sx);
+        h.style.setProperty('--size', size + 'px');
+        const dur = (Math.random()*1.5 + 4.2).toFixed(2); // ~5s
+        h.style.animation = `floatUp ${dur}s ease-in forwards`;
+        layer.appendChild(h);
+        h.addEventListener('animationend', ()=> h.remove());
+      }
+
+      function startEmission(){
+        if(emitter) return; // evita múltiplos
+        const t0 = Date.now();
+        emitter = setInterval(()=>{
+          spawnHeart();
+          if(Math.random() > 0.6){ spawnHeart(); }
+          if(Date.now() - t0 > 5000){ stopEmission(); }
+        }, 120);
+      }
+      function stopEmission(){
+        clearInterval(emitter); emitter = null;
+      }
+
+      zone.addEventListener('mouseenter', startEmission);
+      zone.addEventListener('mouseleave', stopEmission);
+      zone.addEventListener('touchstart', ()=>{ startEmission(); setTimeout(stopEmission, 5200); }, {passive:true});
+    })();
+    
+  </script>
+</body>
+</html>

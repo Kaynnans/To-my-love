@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>To My Love.</title>
+  <style>
+    :root{
+      --bg:#0f1117;         
+      --bg-2:#0b0d12;       
+      --text:#e5e7eb;       
+      --muted:#9aa4b2;      
+      --accent:#22d3ee;     
+      --accent-2:#8b5cf6;   
+      --love-1:#ff6b9e;     
+      --love-2:#ff9a7b;     
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height: 100%; margin:0; }
+    body{
+      background:
+        radial-gradient(800px 500px at 80% 85%, rgba(34,211,238,.18), transparent 60%),
+        radial-gradient(900px 600px at 20% 10%, rgba(139,92,246,.18), transparent 60%), var(--bg-2);
+      color:var(--text);
+      font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+      display:flex; align-items:flex-start; justify-content:center; padding:16px;
+    }
+
+    .phone{
+      width:min(420px, 100%);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px; box-shadow: var(--shadow);
+      padding:16px 14px 28px; position:relative; overflow:hidden;
+    }
+
+    .topbar{ height:56px; display:grid; place-items:center; }
+    .pill-url{ width:86%; height:28px; border-radius:14px; background:#1f2432; border:1px solid rgba(255,255,255,.08); color:#b9c1cf; display:grid; place-items:center; font-size:12px; letter-spacing:.3px; box-shadow: inset 0 2px 10px rgba(0,0,0,.25); }
+
+    .player{ margin-top:6px; background: linear-gradient(135deg, #2a2f42 0%, #222735 60%, #2b2330 100%);
+      border:1px solid rgba(255,255,255,.06); border-radius:18px; padding:12px; display:grid; grid-template-columns:64px 1fr 56px; gap:12px; align-items:center; box-shadow: var(--shadow); }
+    .thumb{ width:64px; height:42px; border-radius:10px; object-fit:cover; background:#333; }
+    .p-title{ font-weight:800; font-size:14px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .p-artist{ color:#b7c1d1; font-size:12px; margin-top:2px; letter-spacing:.25px; }
+    .p-time{ color:#c9d2df; font-size:11px; margin-top:6px; display:flex; gap:8px; align-items:center; }
+    .bar{ height:6px; background:#0e1220; border-radius:999px; overflow:hidden; position:relative; box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+    .bar > i{ display:block; height:100%; width:34%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius:inherit; }
+    .play{ width:46px; height:46px; display:grid; place-items:center; border-radius:999px; background: radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.2), rgba(255,255,255,.08)); border:1px solid rgba(255,255,255,.18); box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+    .play svg{ width:18px; height:18px; }
+
+    .hearts{ position:absolute; left:-8px; top:180px; display:flex; flex-direction:column; gap:44px; pointer-events:none; }
+    .heart{ width:22px; height:22px; background:linear-gradient(135deg, var(--love-1), #ffd47f); transform:rotate(45deg); border-radius:6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.25));}
+    .heart::before,.heart::after{ content:""; position:absolute; width:22px; height:22px; background:inherit; border-radius:50%; }
+    .heart::before{ left:-11px; top:0; }
+    .heart::after{ left:0; top:-11px; }
+
+    .carousel{ position:relative; margin:18px auto 10px; width:min(86%, 360px); border-radius:20px; overflow:hidden; box-shadow: var(--shadow); border:1px solid rgba(255,255,255,.08); }
+    .track{ display:flex; transition: transform .5s ease; }
+    .slide{ min-width:100%; height: 420px; background:#0e1220; display:grid; place-items:center; }
+    .slide img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .ctrl{ position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border:none; border-radius:999px; display:grid; place-items:center; background:rgba(0,0,0,.35); color:#fff; cursor:pointer; backdrop-filter: blur(4px); }
+    .ctrl:focus{ outline:2px solid rgba(255,255,255,.35); }
+    .ctrl.prev{ left:8px; }
+    .ctrl.next{ right:8px; }
+
+    .dots{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:8px; }
+    .dot{ width:8px; height:8px; border-radius:999px; background:#3a4054; }
+    .dot.active{ width:22px; height:10px; border-radius:999px; background:#8188a8; }
+
+    h2{ text-align:center; font-size:24px; margin:16px 0 10px; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+
+    .timer{ margin:10px auto 22px; width:min(92%, 420px); border-radius:14px; padding:12px 14px; border:1px solid rgba(255,255,255,.08); background:#111522; color:#ff8ba5; font-weight:700; text-align:center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.03); }
+    .timer .grad{ background: linear-gradient(90deg, var(--love-1), var(--love-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    .caption{ color:#b3bdcb; text-align:center; margin-top:8px; padding:0 12px; }
+
+    /* corações caindo */
+    .falling-heart {
+      position: fixed;
+      top: -30px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--love-1), var(--love-2));
+      transform: rotate(45deg);
+      border-radius: 6px;
+      animation: fall linear forwards;
+      z-index: 0;
+    }
+    .falling-heart::before,
+    .falling-heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .falling-heart::before { left: -10px; top: 0; }
+    .falling-heart::after  { left: 0; top: -10px; }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(405deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" role="main">
+    <div class="topbar">
+      <div class="pill-url">Desenvolvido por Kaynan Ribeiro 2025</div>
+    </div>
+
+    <section class="player" aria-label="Reprodutor de áudio">
+      <img class="thumb" src="img/aliança.jpg" alt="Capa"/>
+      <div>
+        <div class="p-title">Aliança</div>
+        <div class="p-artist">tribalistas</div>
+        <div class="p-time">
+          <div class="bar" aria-hidden="true"><i></i></div>
+          <span>0:00 / 5:12</span>
+        </div>
+      </div>
+      <!-- adicionado id="playBtn" -->
+      <button id="playBtn" class="play" aria-label="Play">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M8 5v14l11-7L8 5z" fill="white"/>
+  </svg>
+</button>
+
+    </section>
+
+  <audio id="player" preload="metadata">
+    <source src="https://www.dropbox.com/scl/fi/n4wmh52g21reet9jh3zzt/Alian-a.mp3?rlkey=ldeywlxv8jgtj813y5ky9fkej&raw=1" type="audio/mpeg">
+</audio>
+
+
+
+    <div class="hearts" aria-hidden="true">
+      <span class="heart"></span>
+      <span class="heart" style="scale:.9"></span>
+      <span class="heart" style="scale:1.1"></span>
+    </div>
+
+    <figure class="carousel" aria-label="Carrossel de fotos">
+      <div class="track" id="track">
+        <div class="slide"><img src="img/candy-kiss.jpeg" alt="Foto 1"/></div>
+        <div class="slide"><img src="img/dama-de-honra.jpeg" alt="Foto 2"/></div>
+        <div class="slide"><img src="img/lua-de-mel.jpeg" alt="Foto 3"/></div>
+        <div class="slide"><img src="img/veu-e-grinalda.jpeg" alt="Foto 4"/></div>
+        <div class="slide"><img src="img/ninguem-mais-feliz.jpeg" alt="Foto 5"/></div>
+      </div>
+      <button class="ctrl prev" id="prev" aria-label="Foto anterior">&#10094;</button>
+      <button class="ctrl next" id="next" aria-label="Próxima foto">&#10095;</button>
+    </figure>
+
+    <div class="dots" id="dots" aria-label="Indicadores de fotos"></div>
+
+    <h2>Eu te amo há:</h2>
+
+    <div class="timer"><span id="loveTimer" class="grad" data-start="2023-05-20T12:00:00-03:00">carregando…</span></div>
+
+    <p class="caption">Você é a causa da minha felicidade e da minha força.
+    Meu amor por você é verdadeiro, sincero e dedicado,
+    feito para te arrancar sorrisos e para transformar cada dia nosso.
+    Esse site é para você se sentir especial e amada,
+    porque eu te amo profundamente, de coração e alma. 💘🌺</p>
+  </main>
+
+  <script>
+    // Contador
+    (function(){
+      const el = document.getElementById('loveTimer');
+      const start = new Date(el.getAttribute('data-start'));
+      function plural(n,s){return n===1?s:(s==='mês'?'meses':s+'s');}
+      function update(){
+        const now=new Date();
+        let y=now.getFullYear()-start.getFullYear();
+        let mo=now.getMonth()-start.getMonth();
+        let d=now.getDate()-start.getDate();
+        let h=now.getHours()-start.getHours();
+        let mi=now.getMinutes()-start.getMinutes();
+        let s=now.getSeconds()-start.getSeconds();
+        if(s<0){s+=60;mi--;} if(mi<0){mi+=60;h--;} if(h<0){h+=24;d--;}
+        if(d<0){d+=new Date(now.getFullYear(), now.getMonth(), 0).getDate();mo--;}
+        if(mo<0){mo+=12;y--;}
+        el.textContent=`${y} ${plural(y,'ano')}, ${mo} ${plural(mo,'mês')}, ${d} ${plural(d,'dia')}, ${h} ${plural(h,'hora')}, ${mi} ${plural(mi,'minuto')} e ${s} ${plural(s,'segundo')}`;
+      }
+      update();setInterval(update,1000);
+    })();
+
+    // Carrossel
+    (function(){
+      const track=document.getElementById('track');
+      const slides=[...track.children];
+      const dotsWrap=document.getElementById('dots');
+      const prev=document.getElementById('prev');
+      const next=document.getElementById('next');
+      let idx=0,lastUserAction=0;
+      slides.forEach((_,i)=>{
+        const d=document.createElement('span');d.className='dot'+(i===0?' active':'');
+        d.onclick=()=>go(i,true);dotsWrap.appendChild(d);
+      });
+      function updateUI(){track.style.transform=`translateX(${-idx*100}%)`;dotsWrap.querySelectorAll('.dot').forEach((el,i)=>el.classList.toggle('active',i===idx));}
+      function go(i,user){if(user)lastUserAction=Date.now();idx=(i+slides.length)%slides.length;updateUI();}
+      function nextSlide(u){go(idx+1,u);} function prevSlide(u){go(idx-1,u);}
+      function loop(){if(Date.now()-lastUserAction>8000)nextSlide(false);setTimeout(loop,5000);}loop();
+      next.onclick=()=>nextSlide(true);prev.onclick=()=>prevSlide(true);
+    })();
+
+// === Player de áudio (play/pause + progresso em tempo real) ===
+(function(){
+  const btn = document.getElementById('playBtn');
+  const audio = document.getElementById('player');
+  if(!btn || !audio) return;
+
+  const barFill   = document.querySelector('.bar > i');     // parte colorida
+  const timeLabel = document.querySelector('.p-time span'); // "0:00 / 5:12"
+
+  const playSVG  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="white"/></svg>';
+  const pauseSVG = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="white"/><rect x="14" y="5" width="4" height="14" fill="white"/></svg>';
+
+  function fmt(t){
+    if(!isFinite(t)||t<0) return '0:00';
+    const m = Math.floor(t/60);
+    const s = Math.floor(t%60).toString().padStart(2,'0');
+    return `${m}:${s}`;
+  }
+
+  function updateUI(){
+    if(audio.duration){
+      const pct = (audio.currentTime / audio.duration) * 100;
+      if(barFill) barFill.style.width = pct + '%';
+      if(timeLabel) timeLabel.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+    }else{
+      if(barFill) barFill.style.width = '0%';
+      if(timeLabel) timeLabel.textContent = `0:00 / 0:00`;
+    }
+  }
+
+  btn.addEventListener('click', async ()=>{
+    try{
+      if(audio.paused){
+        await audio.play();
+        btn.innerHTML = pauseSVG;
+      } else {
+        audio.pause();
+        btn.innerHTML = playSVG;
+      }
+    }catch(e){
+      console.error('Erro ao tocar:', e);
+      alert("Não consegui tocar o áudio. Verifique o link ou tente novamente.");
+    }
+  });
+
+  // atualiza relógio e barra
+  audio.addEventListener('loadedmetadata', updateUI);
+  audio.addEventListener('timeupdate', updateUI);
+  audio.addEventListener('play', updateUI);
+  audio.addEventListener('pause', updateUI);
+  audio.addEventListener('ended', ()=>{
+    btn.innerHTML = playSVG;
+    if(barFill) barFill.style.width = '0%';
+    updateUI();
+  });
+
+  // inicializa label
+  updateUI();
+})();
+
+
+    // corações caindo lentamente
+    setInterval(()=>{
+      const heart=document.createElement('div');
+      heart.className='falling-heart';
+      heart.style.left=Math.random()*100+'vw';
+      heart.style.animationDuration=(8+Math.random()*5)+'s';
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),15000);
+    },1200);
+  </script>
+</body>
+</html>
